@@ -1,5 +1,7 @@
 mode = homo_chain
 
+parallel = true
+
 NSC=1
 nrange = 1
 nref = 5
@@ -7,7 +9,7 @@ nref = 5
 excited_states = 3
 subspace_set = basic
 
-model = SC-QD-SC-QD-SC
+model = SC-QD-SC-QD-SC-QD-SC-QD-SC-QD-SC
 
 band_level_shift = true
 

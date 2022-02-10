@@ -3,13 +3,12 @@
 import sys
 import time
 import h5py
-from scipy.sparse.linalg import eigsh
+from joblib import Parallel, delayed
 
 import parameters_and_parsing as pp
 import subspace_init
-import physical_classes as physics
-import utility
-import result_printing as res
+import utility as util
+from result_printing import *
 ###########################################################
 if len(sys.argv)!=2:
 	print("Usage: {0} inputFile".format(sys.argv[0]))
@@ -32,26 +31,19 @@ for key in vars(p).keys():
 start = time.time() #start timer
 
 
-results = {}
-for subspace in subspaceDict:
-	s = subspaceDict[subspace]
-	
-	print()
-	print(f"Diagonalizing: {s.n}, {s.Sz}")	
-	print("basis lenght:", s.size())
-	
-	H = physics.HAMILTONIAN(p, s)
+if p.parallel:
+	num_cores=len(subspaceDict)
+	res = Parallel(n_jobs=num_cores)(delayed(diagonalize)(subspaceDict[subspace], p) for subspace in subspaceDict)
+else:
+	res = [diagonalize(subspaceDict[subspace], p) for subspace in subspaceDict]
 
-	values, vectors = eigsh(H, k=min(s.size()-1, p.get_num_of_states(s)), which="SA")
-	vectors = vectors.T
-	values = values + p.Eshift	
+# Diagonalize(s, p) returns a dictionary of STATE objects, which are calculated states. res is a list of these for all subspaces.
+# Now combine all dictionaries into one big one.
 
-	for i in range(len(values)):
-		results[(s.n, s.Sz, i)] = res.STATE(s.n, s.Sz, i, values[i], vectors[i], s)		
-
+results = util.merge_dicts(*res)
 
 h5file = h5py.File("solution.h5", "w")
-res.print_and_save_results(results, p, h5file)
+print_and_save_results(results, p, h5file)
 
 ###########################################################
 

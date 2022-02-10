@@ -115,6 +115,7 @@ class PARAMETERS:
 		self.spin_correlation_matrix = getInput("spin_correlation_matrix", False, self.inputList, "bool")
 
 
+
 	def parse_homo_chain(self, chainString, inputList, D, NSC):	
 
 		chain, couplings = [], []

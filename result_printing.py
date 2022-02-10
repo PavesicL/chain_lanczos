@@ -4,6 +4,8 @@ from subspace_init import BASIS
 import compute_properties as cp
 import utility as util
 import numpy as np
+import physical_classes as physics
+from scipy.sparse.linalg import eigsh
 
 class STATE(BASIS):
 
@@ -16,6 +18,24 @@ class STATE(BASIS):
 		self.E = E
 		self.psi = psi
 
+def diagonalize(s, p):
+
+	results = {}
+
+	print()
+	print(f"Diagonalizing: {s.n}, {s.Sz}")	
+	print("basis lenght:", s.size())
+	
+	H = physics.HAMILTONIAN(p, s)
+
+	values, vectors = eigsh(H, k=min(s.size()-1, p.get_num_of_states(s)), which="SA")
+	vectors = vectors.T
+	values = values + p.Eshift	
+
+	for i in range(len(values)):
+		results[(s.n, s.Sz, i)] = STATE(s.n, s.Sz, i, values[i], vectors[i], s)		
+
+	return results
 
 def print_and_save_results(results, params, h5file):
 
