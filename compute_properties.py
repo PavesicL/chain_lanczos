@@ -30,3 +30,5 @@ def compute_spin_correlation_matrix(state, basisList, params):
 			SS = np.dot(state, SSpsi)
 			mat[i, j] = SS
 	return mat
+
+

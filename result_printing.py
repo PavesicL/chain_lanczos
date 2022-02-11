@@ -46,7 +46,7 @@ def print_and_save_results(results, params, h5file):
 	
 		print(f"\nSTATE n = {r.n}, Sz = {r.Sz}, i = {r.i}:")
 		
-		print(f"E = {r.E}")
+		print_and_save_Es(r, params, h5file)
 		print_site_occupations(r, params, h5file)
 		if params.print_vector:
 			print_vector(r, params)
@@ -62,6 +62,12 @@ def print_and_save_results(results, params, h5file):
 
 def print_list(ll):
 	print(*ll, sep=", ")
+
+###################################################################################################
+
+def print_and_save_Es(state, params, h5file):
+	print(f"E = {state.E}")
+	h5save(h5file, state, "E", state.E)
 
 # VECTOR PRINT ####################################################################################
 

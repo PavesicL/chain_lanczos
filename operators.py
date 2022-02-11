@@ -182,21 +182,30 @@ def SpSmOp(i, j, m, N):
 	offjup = 2*(N-j)-1-1
 	offjdn = 2*(N-j)-1-0
 
+	#first Sm:
 	if bit(m, offjup)==1:
 		if bit(m, offjdn)==0:
-			if bit(m, offidn)==1:
-				if bit(m, offiup)==0:
-					m = flipBit(m, offjup)
-					prefactor = prefactor_offset(m, offjup, N)
-					m = flipBit(m, offjdn)
-					prefactor *= prefactor_offset(m, offjdn, N)
-					m = flipBit(m, offidn)
-					prefactor *= prefactor_offset(m, offidn, N)
-					m = flipBit(m, offiup)
-					prefactor *= prefactor_offset(m, offiup, N)
+			m = flipBit(m, offjup)
+			prefactor = prefactor_offset(m, offjup, N)
+			m = flipBit(m, offjdn)
+			prefactor *= prefactor_offset(m, offjdn, N)
+		else:
+			return 0, 0
+	else:
+		return 0, 0
 
-					return prefactor, m	
-	return 0, 0
+	#then Sp:
+	if bit(m, offidn)==1:
+		if bit(m, offiup)==0:
+			m = flipBit(m, offidn)
+			prefactor *= prefactor_offset(m, offidn, N)
+			m = flipBit(m, offiup)
+			prefactor *= prefactor_offset(m, offiup, N)
+		else:
+			return 0, 0
+	else:
+		return 0, 0
+	return prefactor, m	
 
 def SmSpOp(i, j, m, N):
 
@@ -205,22 +214,31 @@ def SmSpOp(i, j, m, N):
 	offjup = 2*(N-j)-1-1
 	offjdn = 2*(N-j)-1-0
 
+	#first Sp:
 	if bit(m, offjdn)==1:
 		if bit(m, offjup)==0:
-			if bit(m, offiup)==1:
-				if bit(m, offidn)==0:
-					m = flipBit(m, offjdn)
-					prefactor = prefactor_offset(m, offjdn, N)
-					m = flipBit(m, offjup)
-					prefactor *= prefactor_offset(m, offjup, N)
-					m = flipBit(m, offiup)
-					prefactor *= prefactor_offset(m, offiup, N)
-					m = flipBit(m, offidn)
-					prefactor *= prefactor_offset(m, offidn, N)
+			m = flipBit(m, offjdn)
+			prefactor = prefactor_offset(m, offjdn, N)		
+			m = flipBit(m, offjup)
+			prefactor *= prefactor_offset(m, offjup, N)
+		else:
+			return 0, 0
+	else:
+		return 0, 0	
 
-					return prefactor, m	
-	return 0, 0
-
+	#then Sm:
+	if bit(m, offiup)==1:
+		if bit(m, offidn)==0:
+			m = flipBit(m, offiup)
+			prefactor *= prefactor_offset(m, offiup, N)
+			m = flipBit(m, offidn)
+			prefactor *= prefactor_offset(m, offidn, N)			
+		else:
+			return 0, 0
+	else:
+		return 0, 0
+	return prefactor, m	
+	
 def SpSmOnState(i, j, state, N, basisList):
 	"""
 	Calculates the application of S^+ S^- on a given state vector.

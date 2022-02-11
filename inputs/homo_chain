@@ -1,27 +1,23 @@
 mode = homo_chain
 
-parallel = true
+parallel = false
 
 NSC=1
-nrange = 1
+nrange = 0
 nref = 5
 
-excited_states = 3
+excited_states = 1
 subspace_set = basic
 
-model = SC-QD-SC-QD-SC-QD-SC-QD-SC-QD-SC
+model = SC-QD-SC-QD-SC
 
-band_level_shift = true
+band_level_shift = false
 
 end_to_end_spin_correlations = true
 spin_correlation_matrix = true
 
-
-alpha = -0.5
-
-U = 5
-
-Gamma = 0.8
-
-Ec = 3
+alpha = -0.3
+U = 4
+Gamma = 0.0628319
+Ec = 1.5
 n0 = 1
