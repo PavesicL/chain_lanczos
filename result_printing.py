@@ -21,19 +21,26 @@ class STATE(BASIS):
 def diagonalize(s, p):
 
 	results = {}
-
+	
 	print()
 	print(f"Diagonalizing: {s.n}, {s.Sz}")	
 	print("basis lenght:", s.size())
-	
+				
 	H = physics.HAMILTONIAN(p, s)
 
-	values, vectors = eigsh(H, k=min(s.size()-1, p.get_num_of_states(s)), which="SA")
-	vectors = vectors.T
-	values = values + p.Eshift	
+	if s.size() == 1:
+		vector = np.array([1])
+		val = H.HonState(vector, p, s)[0]
 
-	for i in range(len(values)):
-		results[(s.n, s.Sz, i)] = STATE(s.n, s.Sz, i, values[i], vectors[i], s)		
+		results[(s.n, s.Sz, 0)] = STATE(s.n, s.Sz, 0, val, vector, s)
+
+	else:
+		values, vectors = eigsh(H, k=min(s.size()-1, p.get_num_of_states(s)), which="SA")
+		vectors = vectors.T
+		values = values + p.Eshift	
+
+		for i in range(len(values)):
+			results[(s.n, s.Sz, i)] = STATE(s.n, s.Sz, i, values[i], vectors[i], s)		
 
 	return results
 
